@@ -9,6 +9,7 @@
 # ******************************************************************************
 
 # Variables
+# get the toolchain url from: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 TOOLCHAIN_URL="https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu.tar.xz"
 INSTALL_DIR="$HOME/arm-cross-compiler"
 BASHRC_PATH="$HOME/.bashrc"
