@@ -1,32 +1,46 @@
 #!/bin/bash
 
-# Set the desired kernel version
-KERNEL_VERSION="6.6.56"
+# Check if the script is run as root
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
 # Update the package list
 echo "Updating package list..."
-sudo apt-get update
+apt update
 
-# Remove the current kernel (optional)
-#  echo "Removing current kernel..."
-#  sudo apt-get remove --purge linux-image-$(uname -r) -y
+# Install necessary packages for kernel installation
+echo "Installing necessary packages..."
+apt install -y wget curl
 
-# Download the specific kernel version if not already downloaded
-# Adjust the URLs to match where you are downloading the kernel from
-echo "Downloading kernel version $KERNEL_VERSION..."
-wget -O linux-image-${KERNEL_VERSION}.deb "http://example.com/path/to/linux-image-${KERNEL_VERSION}.deb"
-wget -O linux-headers-${KERNEL_VERSION}.deb "http://example.com/path/to/linux-headers-${KERNEL_VERSION}.deb"
+# Define the kernel version
+KERNEL_VERSION="6.6.51"  # Desired kernel version
+KERNEL_URL="https://kernel.ubuntu.com/mainline/v${KERNEL_VERSION}/amd64/"
 
-# Install the downloaded kernel and headers
-echo "Installing kernel version $KERNEL_VERSION..."
-sudo dpkg -i linux-image-${KERNEL_VERSION}.deb linux-headers-${KERNEL_VERSION}.deb
+# Download the .deb files for the kernel
+echo "Downloading kernel packages..."
+wget "${KERNEL_URL}linux-headers-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb"
+wget "${KERNEL_URL}linux-headers-${KERNEL_VERSION}-060651_6.6.51-060651.202409121031_all.deb"
+wget "${KERNEL_URL}linux-image-unsigned-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb"
+wget "${KERNEL_URL}linux-modules-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb"
 
-# Update GRUB
+# Install the downloaded packages
+echo "Installing kernel packages..."
+dpkg -i linux-headers-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
+dpkg -i linux-headers-${KERNEL_VERSION}-060651_6.6.51-060651.202409121031_all.deb
+dpkg -i linux-image-unsigned-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
+dpkg -i linux-modules-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
+
+# Update grub
 echo "Updating GRUB..."
-sudo update-grub
+update-grub
 
-# Reboot the system
-echo "Rebooting the system..."
-sudo reboot
+# Clean up
+echo "Cleaning up..."
+rm linux-headers-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
+rm linux-headers-${KERNEL_VERSION}-060651_6.6.51-060651.202409121031_all.deb
+rm linux-image-unsigned-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
+rm linux-modules-${KERNEL_VERSION}-060651-generic_6.6.51-060651.202409121031_amd64.deb
 
-echo "Kernel change script completed."
+echo "Kernel upgrade to version ${KERNEL_VERSION} complete. Please reboot your system."
