@@ -8,8 +8,8 @@ echo "Updating package list..."
 sudo apt-get update
 
 # Remove the current kernel (optional)
-echo "Removing current kernel..."
-sudo apt-get remove --purge linux-image-$(uname -r) -y
+#  echo "Removing current kernel..."
+#  sudo apt-get remove --purge linux-image-$(uname -r) -y
 
 # Download the specific kernel version if not already downloaded
 # Adjust the URLs to match where you are downloading the kernel from
