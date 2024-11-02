@@ -1,4 +1,6 @@
 #!/bin/bash
+# used to fix problems like: https://github.com/gramineproject/gramine/issues/1909
+# if did not work, use: https://github.com/bkw777/mainline/releases
 
 # Check if the script is run as root
 if [[ $EUID -ne 0 ]]; then
